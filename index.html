@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copy Paster</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__orb ambient__orb--1"></div>
+    <div class="ambient__orb ambient__orb--2"></div>
+    <div class="ambient__orb ambient__orb--3"></div>
+  </div>
+
+  <div class="app">
+    <header class="header">
+      <div class="header__brand">
+        <span class="header__icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="3" width="14" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 3.5V2.5C9 1.67 9.67 1 10.5 1H13.5C14.33 1 15 1.67 15 2.5V3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M8 9H16M8 13H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h1>Copy Paster</h1>
+      </div>
+      <p class="header__tagline">Paste on one device, copy on another</p>
+    </header>
+
+    <section id="setup-panel" class="panel setup-panel hidden">
+      <h2>Connect to Firebase</h2>
+      <p class="setup-panel__hint">
+        Copy <code>js/firebase-config.example.js</code> to <code>js/firebase-config.js</code>
+        and add your Firebase project credentials. See README for setup steps.
+      </p>
+    </section>
+
+    <section id="room-panel" class="panel room-panel hidden">
+      <h2>Your sync room</h2>
+      <p class="room-panel__hint">
+        Bookmark this link on both laptops. Anyone with the link can read and write clips.
+      </p>
+      <div class="room-link">
+        <input id="room-url" type="text" readonly aria-label="Room URL">
+        <button id="copy-room-btn" type="button" class="btn btn--secondary">Copy link</button>
+      </div>
+      <button id="new-room-btn" type="button" class="btn btn--ghost btn--small">Generate new room</button>
+    </section>
+
+    <main id="main-content" class="main hidden">
+      <section class="panel compose-panel">
+        <label for="paste-input" class="compose-panel__label">Paste text here</label>
+        <textarea
+          id="paste-input"
+          class="compose-panel__input"
+          placeholder="Paste or type anything you want to send to your other laptop…"
+          rows="8"
+          spellcheck="false"
+        ></textarea>
+        <div class="compose-panel__actions">
+          <button id="save-btn" type="button" class="btn btn--primary">
+            <span class="btn__label">Save clip</span>
+          </button>
+          <span id="save-status" class="status" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="history-panel__header">
+          <h2>History</h2>
+          <div class="history-panel__meta">
+            <span id="sync-status" class="sync-badge" title="Real-time sync status">Connecting…</span>
+            <span id="clip-count" class="clip-count">0 clips</span>
+          </div>
+        </div>
+
+        <div id="empty-state" class="empty-state">
+          <p>No clips yet. Paste something above and hit Save.</p>
+        </div>
+
+        <ul id="clip-list" class="clip-list" aria-label="Saved clips"></ul>
+
+        <div class="history-panel__footer">
+          <button id="delete-all-btn" type="button" class="btn btn--danger btn--small">
+            Delete all history
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="confirm-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal__backdrop"></div>
+    <div class="modal__content">
+      <h3 id="confirm-title">Delete all clips?</h3>
+      <p>This permanently removes every clip from Firebase. This cannot be undone.</p>
+      <div class="modal__actions">
+        <button id="confirm-cancel" type="button" class="btn btn--secondary">Cancel</button>
+        <button id="confirm-delete" type="button" class="btn btn--danger">Delete everything</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
