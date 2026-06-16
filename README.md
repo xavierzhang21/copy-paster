@@ -4,15 +4,17 @@ A minimal web app for syncing plain text between your personal laptop and work l
 
 Hosted on **GitHub Pages** with **Firebase Firestore** as the database. Updates appear in real time.
 
+**Live site:** [https://xavierzhang21.github.io/copy-paster/](https://xavierzhang21.github.io/copy-paster/)
+
 ## How it works
 
 1. Open the site on your personal laptop and paste text.
-2. Click **Save clip** — it goes to Firebase under your private room.
-3. Open the **same bookmarked link** on your work laptop.
+2. Click **Save clip** — it goes to a shared Firebase collection.
+3. Open the **same URL** on your work laptop.
 4. Click **Copy** on any clip, or read the text directly.
 5. Use **Delete all history** to wipe every clip from the database.
 
-Each browser session gets a unique room URL (e.g. `?room=abc123…`). Bookmark that URL on both machines. Anyone with the link can access that room, so treat it like a password.
+Everyone using the same GitHub Pages link sees the same clips. Bookmark that one URL on both laptops.
 
 ## Setup
 
@@ -30,21 +32,15 @@ cp js/firebase-config.example.js js/firebase-config.js
 
 Edit `js/firebase-config.js` and paste your Firebase credentials.
 
-> `firebase-config.js` is gitignored so your keys are not committed. For GitHub Pages you will add these values in the deployed copy (see deploy step below).
-
 ### 3. Deploy Firestore security rules
 
 In the Firebase Console → **Firestore → Rules**, paste the contents of `firestore.rules` from this repo and publish.
 
 ### 4. Deploy to GitHub Pages
 
-1. Create a new GitHub repository (e.g. `copy-paster`).
-2. Push this project to the repo.
-3. Copy `js/firebase-config.example.js` to `js/firebase-config.js` locally, fill in credentials, and commit **only** `firebase-config.js` if you are comfortable (Firebase web API keys are designed to be public; security comes from Firestore rules + private room URLs). Alternatively, add the file only on the `gh-pages` branch or use GitHub Actions secrets.
-4. In the repo: **Settings → Pages → Source**: deploy from `main` branch, root `/`.
-5. Your site will be at `https://<username>.github.io/copy-paster/`.
-
-**Important:** After the first deploy, open the site, copy your room link, and bookmark it on both laptops.
+1. Push this project to a GitHub repository.
+2. In the repo: **Settings → Pages → Source**: deploy from `main` branch, root `/`.
+3. Your site will be at `https://<username>.github.io/<repo-name>/`.
 
 ## Local development
 
@@ -62,9 +58,7 @@ Then open `http://localhost:3000` (or whatever port `serve` prints).
 
 ## Security notes
 
-- Room IDs are 32-character random hex strings — hard to guess, but not impossible.
-- Do not share your room URL publicly.
-- Firestore rules allow read/write only when `roomId` is at least 16 characters.
+- All clips are stored in one shared collection. Anyone who knows the site URL can read or delete them.
 - This is meant for non-sensitive text snippets. Do not store passwords or confidential data.
 
 ## License

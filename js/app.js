@@ -19,13 +19,9 @@ try {
   firebaseConfig = null;
 }
 
-const ROOM_PARAM = "room";
-const MIN_ROOM_ID_LENGTH = 16;
-
 const $ = (id) => document.getElementById(id);
 
 const setupPanel = $("setup-panel");
-const roomPanel = $("room-panel");
 const mainContent = $("main-content");
 const pasteInput = $("paste-input");
 const saveBtn = $("save-btn");
@@ -38,31 +34,12 @@ const deleteAllBtn = $("delete-all-btn");
 const confirmModal = $("confirm-modal");
 const confirmCancel = $("confirm-cancel");
 const confirmDelete = $("confirm-delete");
-const roomUrlInput = $("room-url");
-const copyRoomBtn = $("copy-room-btn");
-const newRoomBtn = $("new-room-btn");
 
 let db = null;
-let roomId = null;
 let unsubscribe = null;
 
-function generateRoomId() {
-  const bytes = crypto.getRandomValues(new Uint8Array(16));
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-function getRoomFromUrl() {
-  return new URLSearchParams(window.location.search).get(ROOM_PARAM);
-}
-
-function setRoomInUrl(id) {
-  const url = new URL(window.location.href);
-  url.searchParams.set(ROOM_PARAM, id);
-  window.history.replaceState({}, "", url);
-}
-
 function clipsCollection() {
-  return collection(db, "rooms", roomId, "clips");
+  return collection(db, "clips");
 }
 
 function formatTime(timestamp) {
@@ -144,7 +121,7 @@ function renderClips(snapshots) {
     });
 
     li.querySelector(".delete-btn").addEventListener("click", async () => {
-      await deleteDoc(doc(db, "rooms", roomId, "clips", snap.id));
+      await deleteDoc(doc(db, "clips", snap.id));
     });
 
     clipList.appendChild(li);
@@ -198,9 +175,7 @@ async function deleteAllClips() {
   confirmDelete.disabled = true;
   try {
     const snapshot = await getDocs(clipsCollection());
-    await Promise.all(
-      snapshot.docs.map((d) => deleteDoc(doc(db, "rooms", roomId, "clips", d.id)))
-    );
+    await Promise.all(snapshot.docs.map((d) => deleteDoc(doc(db, "clips", d.id))));
     confirmModal.classList.add("hidden");
   } catch (error) {
     console.error("Delete all error:", error);
@@ -208,26 +183,6 @@ async function deleteAllClips() {
   } finally {
     confirmDelete.disabled = false;
   }
-}
-
-function updateRoomUrl() {
-  const url = new URL(window.location.href);
-  url.searchParams.set(ROOM_PARAM, roomId);
-  roomUrlInput.value = url.href;
-}
-
-function initRoom() {
-  roomId = getRoomFromUrl();
-
-  if (!roomId || roomId.length < MIN_ROOM_ID_LENGTH) {
-    roomId = generateRoomId();
-    setRoomInUrl(roomId);
-  }
-
-  updateRoomUrl();
-  roomPanel.classList.remove("hidden");
-  mainContent.classList.remove("hidden");
-  startListener();
 }
 
 function showSetupPanel() {
@@ -257,28 +212,6 @@ function bindEvents() {
   });
 
   confirmDelete.addEventListener("click", deleteAllClips);
-
-  copyRoomBtn.addEventListener("click", async () => {
-    await copyToClipboard(roomUrlInput.value);
-    copyRoomBtn.textContent = "Copied!";
-    setTimeout(() => {
-      copyRoomBtn.textContent = "Copy link";
-    }, 1500);
-  });
-
-  newRoomBtn.addEventListener("click", () => {
-    if (
-      !confirm(
-        "Generate a new room? Your current room link will stop working on this page. Clips in the old room stay in Firebase until you delete them from that room."
-      )
-    ) {
-      return;
-    }
-    roomId = generateRoomId();
-    setRoomInUrl(roomId);
-    updateRoomUrl();
-    startListener();
-  });
 }
 
 function init() {
@@ -296,7 +229,8 @@ function init() {
   try {
     const app = initializeApp(firebaseConfig);
     db = getFirestore(app);
-    initRoom();
+    mainContent.classList.remove("hidden");
+    startListener();
   } catch (error) {
     console.error("Firebase init error:", error);
     showSetupPanel();
