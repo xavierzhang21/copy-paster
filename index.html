@@ -9,14 +9,92 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="is-locked">
   <div class="ambient" aria-hidden="true">
     <div class="ambient__orb ambient__orb--1"></div>
     <div class="ambient__orb ambient__orb--2"></div>
     <div class="ambient__orb ambient__orb--3"></div>
   </div>
 
-  <div class="app">
+  <div id="pin-lock" class="pin-lock" role="dialog" aria-modal="true" aria-labelledby="pin-title" aria-describedby="pin-hint">
+    <div class="pin-lock__inner">
+      <div class="pin-lock__brand">
+        <span class="header__icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="3" width="14" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 3.5V2.5C9 1.67 9.67 1 10.5 1H13.5C14.33 1 15 1.67 15 2.5V3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M8 9H16M8 13H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="pin-lock__app-name">Copy Paster</span>
+      </div>
+
+      <h2 id="pin-title" class="pin-lock__title">Enter Passcode</h2>
+      <p id="pin-hint" class="pin-lock__hint">Enter the 6-digit PIN to open this page</p>
+
+      <div id="pin-dots" class="pin-dots" aria-hidden="true">
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+      </div>
+      <p id="pin-status" class="pin-lock__status" aria-live="assertive"></p>
+
+      <div class="pin-keypad" role="group" aria-label="Number pad">
+        <button type="button" class="pin-key" data-digit="1">
+          <span class="pin-key__num">1</span>
+          <span class="pin-key__letters pin-key__letters--empty">&nbsp;</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="2">
+          <span class="pin-key__num">2</span>
+          <span class="pin-key__letters">ABC</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="3">
+          <span class="pin-key__num">3</span>
+          <span class="pin-key__letters">DEF</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="4">
+          <span class="pin-key__num">4</span>
+          <span class="pin-key__letters">GHI</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="5">
+          <span class="pin-key__num">5</span>
+          <span class="pin-key__letters">JKL</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="6">
+          <span class="pin-key__num">6</span>
+          <span class="pin-key__letters">MNO</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="7">
+          <span class="pin-key__num">7</span>
+          <span class="pin-key__letters">PQRS</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="8">
+          <span class="pin-key__num">8</span>
+          <span class="pin-key__letters">TUV</span>
+        </button>
+        <button type="button" class="pin-key" data-digit="9">
+          <span class="pin-key__num">9</span>
+          <span class="pin-key__letters">WXYZ</span>
+        </button>
+        <span class="pin-key pin-key--spacer" aria-hidden="true"></span>
+        <button type="button" class="pin-key" data-digit="0">
+          <span class="pin-key__num">0</span>
+          <span class="pin-key__letters pin-key__letters--empty">&nbsp;</span>
+        </button>
+        <button type="button" class="pin-key pin-key--delete" data-action="delete" aria-label="Delete">
+          <svg width="28" height="20" viewBox="0 0 28 20" fill="none" aria-hidden="true">
+            <path d="M10.2 2H24c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H10.2c-.6 0-1.17-.26-1.56-.71L1.8 10l6.84-7.29C9.03 2.26 9.6 2 10.2 2Z" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M13 7l6 6M19 7l-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app hidden" id="app">
     <header class="header">
       <div class="header__brand">
         <span class="header__icon" aria-hidden="true">

@@ -8,13 +8,13 @@ Hosted on **GitHub Pages** with **Firebase Firestore** as the database. Updates 
 
 ## How it works
 
-1. Open the site on your personal laptop and paste text.
-2. Click **Save clip** — it goes to a shared Firebase collection.
-3. Open the **same URL** on your work laptop.
+1. Open the site and enter the 6-digit PIN to unlock the page.
+2. On your personal laptop, paste text and click **Save clip** — it goes to a shared Firebase collection.
+3. Open the **same URL** on your work laptop and enter the PIN again.
 4. Click **Copy** on any clip, or read the text directly.
 5. Use **Delete all history** to wipe every clip from the database.
 
-Everyone using the same GitHub Pages link sees the same clips. Bookmark that one URL on both laptops.
+Everyone using the same GitHub Pages link sees the same clips. Bookmark that one URL on both laptops. The PIN is required once per browser tab session.
 
 ## Setup
 
@@ -54,11 +54,12 @@ Then open `http://localhost:3000` (or whatever port `serve` prints).
 
 ## Keyboard shortcut
 
-**Ctrl+Enter** (or **Cmd+Enter** on Mac) saves the current text in the compose box.
+**Number keys** and **Backspace** work on the passcode screen. After unlock, **Ctrl+Enter** (or **Cmd+Enter** on Mac) saves the current text in the compose box.
 
 ## Security notes
 
-- All clips are stored in one shared collection. Anyone who knows the site URL can read or delete them.
+- The 6-digit PIN is a client-side page gate. It is not Firebase Authentication; anyone who inspects the page source can find it.
+- All clips are stored in one shared collection. Anyone who knows the site URL (and PIN) can read or delete them.
 - This is meant for non-sensitive text snippets. Do not store passwords or confidential data.
 
 ## License
