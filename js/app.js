@@ -1,3 +1,4 @@
+import { waitForUnlock } from "./pin-lock.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {
   getFirestore,
@@ -237,4 +238,4 @@ function init() {
   }
 }
 
-init();
+waitForUnlock().then(init);
